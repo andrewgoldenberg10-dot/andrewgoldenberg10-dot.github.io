@@ -61,7 +61,17 @@
                 </div>
             </div>
 
-            <div class="flex gap-3">
+            <div id="game-over-banner" class="bg-gray-900 border border-orange-500/30 p-5 rounded-2xl hidden flex-col sm:flex-row justify-between items-center gap-4 text-center sm:text-left">
+                <div>
+                    <h2 id="banner-headline" class="text-xl font-black text-orange-500"></h2>
+                    <p id="banner-summary" class="text-xs text-gray-400 mt-1"></p>
+                </div>
+                <button onclick="resetToMenu()" class="bg-orange-500 text-white font-black px-6 py-3 rounded-xl uppercase text-xs tracking-wider transition hover:bg-orange-600 cursor-pointer w-full sm:w-auto">
+                    Play Another Round
+                </button>
+            </div>
+
+            <div id="input-container-block" class="flex gap-3">
                 <input type="text" id="trivia-input" oninput="checkTriviaGuess()" placeholder="Type complete first or last name..." class="flex-1 bg-gray-900 border border-gray-800 rounded-xl px-4 py-3.5 text-white focus:outline-none focus:border-orange-500 text-sm font-semibold tracking-wide placeholder-gray-600">
                 <button onclick="giveUpMatch()" class="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-black text-xs uppercase tracking-wider px-5 rounded-xl transition transform active:scale-95 cursor-pointer">
                     🏳️ Give Up
@@ -72,20 +82,6 @@
                 <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Roster Fill Progress (<span id="unlocked-count" class="font-mono text-white">0</span> / <span id="total-count" class="font-mono text-gray-500">0</span>)</h3>
                 <div id="roster-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5"></div>
             </div>
-        </div>
-    </div>
-
-    <div id="results-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden items-center justify-center p-4 z-50">
-        <div class="bg-gray-900 border border-gray-800 rounded-3xl p-6 max-w-xl w-full text-center space-y-4 max-h-[90vh] overflow-y-auto">
-            <h2 id="modal-headline" class="text-2xl font-black text-orange-500"></h2>
-            <div id="modal-summary" class="bg-gray-950 border border-gray-800 p-4 rounded-xl text-sm"></div>
-            
-            <div id="modal-missed-section" class="text-left space-y-2 hidden">
-                <h4 class="text-xs font-bold uppercase tracking-wider text-red-400">Players You Missed:</h4>
-                <div id="modal-missed-list" class="grid grid-cols-2 gap-2 text-xs font-mono text-gray-300 bg-gray-950 p-3 rounded-xl border border-gray-800"></div>
-            </div>
-
-            <button onclick="closeModal()" class="w-full bg-orange-500 text-white font-black px-6 py-3 rounded-xl uppercase text-xs tracking-wider cursor-pointer">Play Again</button>
         </div>
     </div>
 
@@ -155,8 +151,11 @@
             botGuessedRosterNames = [];
             triviaTimeRemaining = 60;
 
+            document.getElementById('game-over-banner').classList.add('hidden');
+            document.getElementById('input-container-block').classList.remove('hidden');
             document.getElementById('trivia-input').disabled = false;
             document.getElementById('trivia-input').value = "";
+            
             document.getElementById('target-team-year').innerText = currentTriviaMatch.year;
             document.getElementById('target-team-title').innerText = currentTriviaMatch.name;
             document.getElementById('player-score-lbl').innerText = "0";
@@ -166,7 +165,6 @@
             document.getElementById('trivia-setup-card').classList.add('hidden');
             document.getElementById('trivia-active-board').classList.remove('hidden');
             document.getElementById('trivia-timer-block').classList.remove('hidden');
-            document.getElementById('modal-missed-section').classList.add('hidden');
             
             if(triviaGameMode === 'versus') {
                 document.getElementById('vs-scoreboard').classList.remove('hidden');
@@ -193,6 +191,7 @@
                 } else if (botGuessedRosterNames.includes(player)) {
                     return `<div class="bg-amber-950/40 border border-amber-500/30 p-3 rounded-xl text-center"><span class="text-xs font-bold text-amber-400 block truncate">${player}</span><span class="text-[8px] font-mono font-bold text-amber-600 block mt-0.5">🤖 Bot Stole</span></div>`;
                 } else if (isGameOver) {
+                    // Highlights completely missing un-guessed names cleanly in red blocks
                     return `<div class="bg-red-950/30 border border-red-900/40 p-3 rounded-xl text-center"><span class="text-xs font-bold text-red-400 block truncate">${player}</span><span class="text-[8px] font-mono font-bold text-red-700 block mt-0.5">Missing</span></div>`;
                 } else {
                     return `<div class="bg-gray-950 border border-gray-900 p-3 rounded-xl text-center text-[10px] font-mono font-black text-gray-700 uppercase flex flex-col justify-center min-h-[52px]">Player ${idx+1}</div>`;
@@ -247,43 +246,36 @@
             clearInterval(triviaTimerInterval);
             clearInterval(botSimulationInterval);
             
-            document.getElementById('trivia-input').disabled = true;
+            // Swap input field with our custom results banner card
+            document.getElementById('input-container-block').classList.add('hidden');
+            document.getElementById('game-over-banner').classList.remove('hidden');
+            
             renderRosterGrid(); 
             
             let headline = "Round Complete!";
-            let summary = `You identified ${guessedRosterNames.length} out of ${currentTriviaMatch.roster.length} players.`;
+            let summary = `You identified ${guessedRosterNames.length} out of ${currentTriviaMatch.roster.length} players total. See missed answers in red below!`;
 
             if (didGiveUp) {
-                headline = "🏳️ Surrendered";
-                summary = `You gave up! You found ${guessedRosterNames.length} players before quitting.`;
+                headline = "🏳️ Match Conceded";
+                summary = `You opted to forfeit. You completed ${guessedRosterNames.length} tiles. Rest revealed below!`;
             } else if(triviaGameMode === 'versus') {
                 if(guessedRosterNames.length > botGuessedRosterNames.length) {
                     headline = "🏆 Victory!";
-                    summary = `You beat the bot ${guessedRosterNames.length} to ${botGuessedRosterNames.length}!`;
+                    summary = `You defeated the AI bot player ${guessedRosterNames.length} to ${botGuessedRosterNames.length}!`;
                 } else if(guessedRosterNames.length < botGuessedRosterNames.length) {
                     headline = "❌ Defeat";
-                    summary = `The Bot beat you ${botGuessedRosterNames.length} to ${guessedRosterNames.length}.`;
+                    summary = `The bot outperformed your draft ${botGuessedRosterNames.length} to ${guessedRosterNames.length}.`;
                 } else {
                     headline = "🤝 Tie Match";
-                    summary = `Even split! Both scored ${guessedRosterNames.length}.`;
+                    summary = `An equal lock! Both factions managed an even ${guessedRosterNames.length} points.`;
                 }
             }
 
-            // FILTER AND APPEND MISSED NAMES INSIDE MODAL
-            const missedPlayers = currentTriviaMatch.roster.filter(p => !guessedRosterNames.includes(p) && !botGuessedRosterNames.includes(p));
-            if (missedPlayers.length > 0) {
-                const missedListContainer = document.getElementById('modal-missed-list');
-                missedListContainer.innerHTML = missedPlayers.map(p => `<div>❌ ${p}</div>`).join('');
-                document.getElementById('modal-missed-section').classList.remove('hidden');
-            }
-
-            document.getElementById('modal-headline').innerText = headline;
-            document.getElementById('modal-summary').innerText = summary;
-            document.getElementById('results-modal').classList.replace('hidden', 'flex');
+            document.getElementById('banner-headline').innerText = headline;
+            document.getElementById('banner-summary').innerText = summary;
         }
 
-        function closeModal() {
-            document.getElementById('results-modal').classList.replace('flex', 'hidden');
+        function resetToMenu() {
             document.getElementById('trivia-active-board').classList.add('hidden');
             document.getElementById('trivia-timer-block').classList.add('hidden');
             document.getElementById('trivia-setup-card').classList.remove('hidden');
