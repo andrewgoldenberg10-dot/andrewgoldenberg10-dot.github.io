@@ -11,7 +11,7 @@
         <header class="bg-gray-900 border border-gray-800 p-6 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
                 <h1 class="text-2xl font-black text-orange-500 tracking-tight">⏱️ ROSTER ARENA TRIVIA</h1>
-                <p class="text-xs text-gray-400 mt-1">Name all 15 players from the randomly chosen historical NBA team database.</p>
+                <p class="text-xs text-gray-400 mt-1">Name all players from the randomly chosen historical NBA team database.</p>
             </div>
             <div id="trivia-timer-block" class="bg-gray-950 px-5 py-3 rounded-xl border border-gray-800 text-center font-mono shrink-0 hidden">
                 <span class="text-[10px] font-bold text-red-400 block uppercase tracking-wider">Remaining Time</span>
@@ -47,7 +47,7 @@
             <div class="bg-gray-900 border border-gray-800 p-6 rounded-2xl text-center space-y-2">
                 <span id="target-team-year" class="text-xs font-bold bg-orange-950 border border-orange-900/40 text-orange-400 px-3 py-1 rounded-full font-mono"></span>
                 <h2 id="target-team-title" class="text-3xl font-black tracking-tight text-white"></h2>
-                <p class="text-xs text-gray-400 max-w-md mx-auto">Type any part of a player's name below. Correct entries automatically claim slots.</p>
+                <p class="text-xs text-gray-400 max-w-md mx-auto">Type a player's full first or last name below. Correct entries automatically claim slots.</p>
             </div>
 
             <div id="vs-scoreboard" class="grid grid-cols-2 gap-4 hidden">
@@ -61,8 +61,11 @@
                 </div>
             </div>
 
-            <div class="bg-gray-900 border border-gray-800 rounded-2xl p-4">
-                <input type="text" id="trivia-input" oninput="checkTriviaGuess()" placeholder="Type player name here..." class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-3.5 text-white focus:outline-none focus:border-orange-500 text-sm font-semibold tracking-wide placeholder-gray-600">
+            <div class="flex gap-3">
+                <input type="text" id="trivia-input" oninput="checkTriviaGuess()" placeholder="Type complete first or last name..." class="flex-1 bg-gray-900 border border-gray-800 rounded-xl px-4 py-3.5 text-white focus:outline-none focus:border-orange-500 text-sm font-semibold tracking-wide placeholder-gray-600">
+                <button onclick="giveUpMatch()" class="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-black text-xs uppercase tracking-wider px-5 rounded-xl transition transform active:scale-95 cursor-pointer">
+                    🏳️ Give Up
+                </button>
             </div>
 
             <div class="bg-gray-900 border border-gray-800 rounded-2xl p-6 space-y-4">
@@ -90,8 +93,8 @@
         let triviaTimeRemaining = 60;
         let triviaTimerInterval = null;
         let botSimulationInterval = null;
+        let isGameOver = false;
 
-        // FETCH EXTERNALLY POPULATED DATABASE
         window.addEventListener('DOMContentLoaded', () => {
             fetch('./nba_historical_rosters.json')
                 .then(res => res.json())
@@ -138,6 +141,7 @@
             
             clearInterval(triviaTimerInterval);
             clearInterval(botSimulationInterval);
+            isGameOver = false;
 
             const randIndex = Math.floor(Math.random() * historicalTeamsDatabase.length);
             currentTriviaMatch = historicalTeamsDatabase[randIndex];
@@ -145,6 +149,8 @@
             botGuessedRosterNames = [];
             triviaTimeRemaining = 60;
 
+            document.getElementById('trivia-input').disabled = false;
+            document.getElementById('trivia-input').value = "";
             document.getElementById('target-team-year').innerText = currentTriviaMatch.year;
             document.getElementById('target-team-title').innerText = currentTriviaMatch.name;
             document.getElementById('player-score-lbl').innerText = "0";
@@ -168,7 +174,7 @@
                 triviaTimeRemaining--;
                 let sec = triviaTimeRemaining;
                 document.getElementById('trivia-countdown').innerText = `00:${sec < 10 ? '0' : ''}${sec}`;
-                if (triviaTimeRemaining <= 0) endMatch();
+                if (triviaTimeRemaining <= 0) endMatch(false);
             }, 1000);
         }
 
@@ -176,9 +182,12 @@
             const grid = document.getElementById('roster-grid');
             grid.innerHTML = currentTriviaMatch.roster.map((player, idx) => {
                 if (guessedRosterNames.includes(player)) {
-                    return `<div class="bg-emerald-950/40 border border-emerald-500/30 p-3 rounded-xl text-center"><span class="text-xs font-bold text-emerald-400 block truncate">${player}</span><span class="text-[8px] font-mono font-bold text-emerald-600 block mt-0.5">✓ Found</span></div>`;
+                    return `<div class="bg-emerald-950/40 border border-emerald-500/30 p-3 rounded-xl text-center animate-fade-in"><span class="text-xs font-bold text-emerald-400 block truncate">${player}</span><span class="text-[8px] font-mono font-bold text-emerald-600 block mt-0.5">✓ Found</span></div>`;
                 } else if (botGuessedRosterNames.includes(player)) {
-                    return `<div class="bg-red-950/40 border border-red-500/30 p-3 rounded-xl text-center"><span class="text-xs font-bold text-red-400 block truncate">${player}</span><span class="text-[8px] font-mono font-bold text-red-600 block mt-0.5">🤖 Bot Stole</span></div>`;
+                    return `<div class="bg-amber-950/40 border border-amber-500/30 p-3 rounded-xl text-center"><span class="text-xs font-bold text-amber-400 block truncate">${player}</span><span class="text-[8px] font-mono font-bold text-amber-600 block mt-0.5">🤖 Bot Stole</span></div>`;
+                } else if (isGameOver) {
+                    // Show revealed players if player gave up or timer ended
+                    return `<div class="bg-red-950/30 border border-red-900/40 p-3 rounded-xl text-center"><span class="text-xs font-bold text-red-400 block truncate">${player}</span><span class="text-[8px] font-mono font-bold text-red-700 block mt-0.5">Missing</span></div>`;
                 } else {
                     return `<div class="bg-gray-950 border border-gray-900 p-3 rounded-xl text-center text-[10px] font-mono font-black text-gray-700 uppercase flex flex-col justify-center min-h-[52px]">Player ${idx+1}</div>`;
                 }
@@ -189,18 +198,22 @@
         }
 
         function checkTriviaGuess() {
+            if (isGameOver) return;
             const input = document.getElementById('trivia-input');
             const val = input.value.trim().toLowerCase();
-            if (val.length < 3) return;
 
             currentTriviaMatch.roster.forEach(player => {
                 if (!guessedRosterNames.includes(player) && !botGuessedRosterNames.includes(player)) {
-                    if (player.toLowerCase().includes(val)) {
+                    // Splits full name into pieces (e.g. "Stephen", "Curry") to test absolute exact structural fragments
+                    const nameParts = player.toLowerCase().split(' ');
+                    
+                    // Match if input strictly equals full first name, full last name, or the full combined name
+                    if (nameParts.includes(val) || player.toLowerCase() === val) {
                         guessedRosterNames.push(player);
                         input.value = "";
                         document.getElementById('player-score-lbl').innerText = guessedRosterNames.length;
                         renderRosterGrid();
-                        if (guessedRosterNames.length + botGuessedRosterNames.length === currentTriviaMatch.roster.length) endMatch();
+                        if (guessedRosterNames.length + botGuessedRosterNames.length === currentTriviaMatch.roster.length) endMatch(false);
                     }
                 }
             });
@@ -215,19 +228,31 @@
                     botGuessedRosterNames.push(pick);
                     document.getElementById('bot-score-lbl').innerText = botGuessedRosterNames.length;
                     renderRosterGrid();
-                    if (guessedRosterNames.length + botGuessedRosterNames.length === currentTriviaMatch.roster.length) endMatch();
+                    if (guessedRosterNames.length + botGuessedRosterNames.length === currentTriviaMatch.roster.length) endMatch(false);
                 }
             }, delay);
         }
 
-        function endMatch() {
+        function giveUpMatch() {
+            if (isGameOver) return;
+            endMatch(true);
+        }
+
+        function endMatch(didGiveUp = false) {
+            isGameOver = true;
             clearInterval(triviaTimerInterval);
             clearInterval(botSimulationInterval);
             
+            document.getElementById('trivia-input').disabled = true;
+            renderRosterGrid(); // Re-render to show un-guessed names in red
+            
             let headline = "Round Complete!";
-            let summary = `You identified ${guessedRosterNames.length} players.`;
+            let summary = `You identified ${guessedRosterNames.length} out of ${currentTriviaMatch.roster.length} players.`;
 
-            if(triviaGameMode === 'versus') {
+            if (didGiveUp) {
+                headline = "🏳️ Surrendered";
+                summary = `You gave up! You found ${guessedRosterNames.length} players before quitting.`;
+            } else if(triviaGameMode === 'versus') {
                 if(guessedRosterNames.length > botGuessedRosterNames.length) {
                     headline = "🏆 Victory!";
                     summary = `You beat the bot ${guessedRosterNames.length} to ${botGuessedRosterNames.length}!`;
