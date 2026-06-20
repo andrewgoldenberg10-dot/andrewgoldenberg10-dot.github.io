@@ -1,0 +1,32 @@
+[
+  {
+    "id": "gs_2015",
+    "year": "2015",
+    "name": "Golden State Warriors",
+    "roster": ["Stephen Curry", "Klay Thompson", "Draymond Green", "Harrison Barnes", "Andrew Bogut", "Andre Iguodala", "Shaun Livingston", "Marreese Speights", "Leandro Barbosa", "Festus Ezeli", "Brandon Rush", "Justin Holiday", "James Michael McAdoo", "Ognjen Kuzmic", "David Lee"]
+  },
+  {
+    "id": "chi_1996",
+    "year": "1996",
+    "name": "Chicago Bulls",
+    "roster": ["Michael Jordan", "Scottie Pippen", "Dennis Rodman", "Ron Harper", "Luc Longley", "Toni Kukoc", "Steve Kerr", "Bill Wennington", "Jud Buechler", "Randy Brown", "John Salley", "James Edwards", "Dickey Simpkins", "Jack Haley"]
+  },
+  {
+    "id": "cle_2016",
+    "year": "2016",
+    "name": "Cleveland Cavaliers",
+    "roster": ["LeBron James", "Kyrie Irving", "Kevin Love", "JR Smith", "Tristan Thompson", "Iman Shumpert", "Richard Jefferson", "Matthew Dellavedova", "Channing Frye", "Timofey Mozgov", "Mo Williams", "James Jones", "Dahntay Jones", "Sasha Kaun"]
+  },
+  {
+    "id": "lal_2001",
+    "year": "2001",
+    "name": "Los Angeles Lakers",
+    "roster": ["Shaquille O'Neal", "Kobe Bryant", "Derek Fisher", "Rick Fox", "Horace Grant", "Robert Horry", "Brian Shaw", "Tyronn Lue", "Mark Madsen", "Devean George", "Greg Foster", "Isaiah Rider", "Stanislav Medvedenko", "Mike Penberthy"]
+  },
+  {
+    "id": "bos_1986",
+    "year": "1986",
+    "name": "Boston Celtics",
+    "roster": ["Larry Bird", "Kevin McHale", "Robert Parish", "Dennis Johnson", "Danny Ainge", "Bill Walton", "Jerry Sichting", "Scott Wedman", "Greg Kite", "Rick Carlisle", "Sam Vincent", "David Thirdkill"]
+  }
+]
