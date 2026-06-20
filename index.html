@@ -2,85 +2,114 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>NBA Roster Arena Trivia Game</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NBA Roster Arena | Ultimate Basketball Trivia</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .font-display { font-family: 'Space Grotesk', sans-serif; }
+    </style>
 </head>
-<body class="bg-gray-950 text-white p-4 md:p-6 min-h-screen">
+<body class="bg-slate-950 text-slate-100 min-h-screen selection:bg-orange-500 selection:text-white antialiased">
 
-    <div class="max-w-4xl mx-auto space-y-6 mt-4">
-        <header class="bg-gray-900 border border-gray-800 p-6 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[500px] bg-gradient-to-b from-orange-500/10 via-transparent to-transparent pointer-events-none blur-3xl z-0"></div>
+
+    <div class="relative max-w-4xl mx-auto px-4 py-8 md:py-12 space-y-8 z-10">
+        
+        <header class="bg-slate-900/80 backdrop-blur-md border border-slate-800 p-6 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 shadow-xl shadow-orange-950/20">
             <div>
-                <h1 class="text-2xl font-black text-orange-500 tracking-tight">⏱️ ROSTER ARENA TRIVIA</h1>
-                <p class="text-xs text-gray-400 mt-1">Name all players from the randomly chosen historical NBA team database.</p>
+                <div class="flex items-center gap-2">
+                    <span class="bg-orange-500 text-slate-950 text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded-md font-display">LIVE</span>
+                    <h1 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-orange-500 to-amber-500 tracking-tight font-display">ROSTER ARENA</h1>
+                </div>
+                <p class="text-sm text-slate-400 mt-1 font-medium">Test your basketball memory against historical hardwood legends.</p>
             </div>
-            <div id="trivia-timer-block" class="bg-gray-950 px-5 py-3 rounded-xl border border-gray-800 text-center font-mono shrink-0 hidden">
-                <span class="text-[10px] font-bold text-red-400 block uppercase tracking-wider">Remaining Time</span>
-                <span id="trivia-countdown" class="text-xl font-black text-white">02:00</span>
+            <div id="trivia-timer-block" class="bg-slate-950/60 px-6 py-3 rounded-xl border border-slate-800/80 text-center font-mono shrink-0 hidden backdrop-blur-sm min-w-[130px]">
+                <span class="text-[10px] font-bold text-red-400 block uppercase tracking-wider mb-0.5">SHOT CLOCK</span>
+                <span id="trivia-countdown" class="text-2xl font-bold text-white tracking-wider">01:00</span>
             </div>
         </header>
 
-        <div id="trivia-setup-card" class="bg-gray-900 border border-gray-800 rounded-2xl p-6 space-y-6">
-            <h2 class="text-lg font-black tracking-tight text-gray-200">Set Up Your Match Variant</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="space-y-2">
-                    <label class="text-xs text-gray-400 font-bold uppercase tracking-wide">Match Type Mode</label>
-                    <div class="grid grid-cols-2 gap-2">
-                        <button onclick="setTriviaMode('solo')" id="tmode-solo" class="py-3 px-4 bg-orange-500 text-white font-black rounded-xl text-xs uppercase tracking-wider cursor-pointer">🕹️ Solo Run</button>
-                        <button onclick="setTriviaMode('versus')" id="tmode-versus" class="py-3 px-4 bg-gray-950 border border-gray-800 text-gray-300 font-bold rounded-xl text-xs uppercase tracking-wider cursor-pointer">🤖 Bot Matchup</button>
+        <div id="trivia-setup-card" class="bg-slate-900/40 backdrop-blur-md border border-slate-800/60 rounded-3xl p-6 md:p-8 space-y-8 shadow-2xl">
+            <div class="space-y-1">
+                <h2 class="text-xl font-bold tracking-tight text-slate-100 font-display">Configure Match Parameters</h2>
+                <p class="text-xs text-slate-400">Select your preferred format and artificial intelligence configurations below.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-3">
+                    <label class="text-xs text-slate-400 font-bold uppercase tracking-widest block">Gameplay Format</label>
+                    <div class="grid grid-cols-2 gap-3">
+                        <button onclick="setTriviaMode('solo')" id="tmode-solo" class="py-3.5 px-4 bg-gradient-to-b from-orange-500 to-orange-600 text-white font-bold rounded-xl text-xs uppercase tracking-wider cursor-pointer shadow-lg shadow-orange-500/20 transition-all duration-200">🕹️ Solo Campaign</button>
+                        <button onclick="setTriviaMode('versus')" id="tmode-versus" class="py-3.5 px-4 bg-slate-950 border border-slate-800 hover:border-slate-700 text-slate-300 font-bold rounded-xl text-xs uppercase tracking-wider cursor-pointer transition-all duration-200">🤖 Rival Bot AI</button>
                     </div>
                 </div>
-                <div id="bot-diff-container" class="space-y-2 opacity-40 pointer-events-none transition-opacity">
-                    <label class="text-xs text-gray-400 font-bold uppercase tracking-wide">Bot AI Difficulty Scaling</label>
+                
+                <div id="bot-diff-container" class="space-y-3 opacity-30 pointer-events-none transition-opacity duration-300">
+                    <label class="text-xs text-slate-400 font-bold uppercase tracking-widest block">Rival Simulation Difficulty</label>
                     <div class="grid grid-cols-3 gap-2">
-                        <button onclick="setBotDifficulty('easy')" id="diff-easy" class="py-3 bg-gray-950 border border-gray-800 text-gray-400 text-xs font-bold rounded-xl uppercase tracking-wider cursor-pointer">Easy</button>
-                        <button onclick="setBotDifficulty('medium')" id="diff-medium" class="py-3 bg-orange-500 text-white text-xs font-bold rounded-xl uppercase tracking-wider cursor-pointer">Medium</button>
-                        <button onclick="setBotDifficulty('hard')" id="diff-hard" class="py-3 bg-gray-950 border border-gray-800 text-gray-400 text-xs font-bold rounded-xl uppercase tracking-wider cursor-pointer">Hard</button>
+                        <button onclick="setBotDifficulty('easy')" id="diff-easy" class="py-3.5 bg-slate-950 border border-slate-800 text-slate-400 text-xs font-bold rounded-xl uppercase tracking-wider cursor-pointer transition-all duration-200">Bench</button>
+                        <button onclick="setBotDifficulty('medium')" id="diff-medium" class="py-3.5 bg-gradient-to-b from-orange-500 to-orange-600 text-white text-xs font-bold rounded-xl uppercase tracking-wider cursor-pointer shadow-lg shadow-orange-500/20 transition-all duration-200">Starter</button>
+                        <button onclick="setBotDifficulty('hard')" id="diff-hard" class="py-3.5 bg-slate-950 border border-slate-800 text-slate-400 text-xs font-bold rounded-xl uppercase tracking-wider cursor-pointer transition-all duration-200">All-Star</button>
                     </div>
                 </div>
             </div>
-            <button id="start-btn" onclick="startTriviaMatch()" class="w-full bg-gray-800 text-gray-600 font-black py-4 rounded-xl uppercase tracking-wider text-sm cursor-not-allowed" disabled>
-                Loading Roster Database...
+
+            <button id="start-btn" onclick="startTriviaMatch()" class="w-full bg-slate-800 text-slate-600 font-bold py-4.5 rounded-xl uppercase tracking-widest text-sm transition-all duration-300 cursor-not-allowed font-display" disabled>
+                Analyzing Historical Archives...
             </button>
         </div>
 
         <div id="trivia-active-board" class="space-y-6 hidden">
-            <div class="bg-gray-900 border border-gray-800 p-6 rounded-2xl text-center space-y-2">
-                <span id="target-team-year" class="text-xs font-bold bg-orange-950 border border-orange-900/40 text-orange-400 px-3 py-1 rounded-full font-mono"></span>
-                <h2 id="target-team-title" class="text-3xl font-black tracking-tight text-white"></h2>
-                <p class="text-xs text-gray-400 max-w-md mx-auto">Type a player's full first or last name below. Correct entries automatically claim slots.</p>
+            
+            <div class="bg-gradient-to-b from-slate-900 to-slate-950 border border-slate-800 p-8 rounded-3xl text-center space-y-3 shadow-xl relative overflow-hidden">
+                <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(249,115,22,0.05),transparent_60%)]"></div>
+                <div class="relative z-10 space-y-2">
+                    <span id="target-team-year" class="text-xs font-bold bg-orange-500/10 border border-orange-500/30 text-orange-400 px-4 py-1.5 rounded-full font-mono tracking-widest inline-block"></span>
+                    <h2 id="target-team-title" class="text-3xl md:text-4xl font-black tracking-tight text-white font-display"></h2>
+                    <p class="text-xs text-slate-400 max-w-md mx-auto">Input standard full names (First or Last). Structural exact matches will claim available spaces.</p>
+                </div>
             </div>
 
             <div id="vs-scoreboard" class="grid grid-cols-2 gap-4 hidden">
-                <div class="bg-gray-900 border border-emerald-900/30 p-4 rounded-xl text-center">
-                    <span class="text-[10px] text-gray-400 uppercase font-black tracking-wider block">Your Score</span>
-                    <span id="player-score-lbl" class="text-2xl font-black text-emerald-400 font-mono">0</span>
+                <div class="bg-slate-900/60 border border-emerald-500/10 p-5 rounded-2xl text-center backdrop-blur-sm shadow-lg">
+                    <span class="text-[10px] text-slate-400 uppercase font-bold tracking-widest block mb-1">USER EFFICIENCY</span>
+                    <span id="player-score-lbl" class="text-3xl font-bold text-emerald-400 font-mono tracking-tight">0</span>
                 </div>
-                <div class="bg-gray-900 border border-red-900/30 p-4 rounded-xl text-center">
-                    <span class="text-[10px] text-gray-400 uppercase font-black tracking-wider block">Bot Score</span>
-                    <span id="bot-score-lbl" class="text-2xl font-black text-red-400 font-mono">0</span>
+                <div class="bg-slate-900/60 border border-amber-500/10 p-5 rounded-2xl text-center backdrop-blur-sm shadow-lg">
+                    <span class="text-[10px] text-slate-400 uppercase font-bold tracking-widest block mb-1">BOT ALGORITHM</span>
+                    <span id="bot-score-lbl" class="text-3xl font-bold text-amber-400 font-mono tracking-tight">0</span>
                 </div>
             </div>
 
-            <div id="game-over-banner" class="bg-gray-900 border border-orange-500/30 p-5 rounded-2xl hidden flex-col sm:flex-row justify-between items-center gap-4 text-center sm:text-left">
-                <div>
-                    <h2 id="banner-headline" class="text-xl font-black text-orange-500"></h2>
-                    <p id="banner-summary" class="text-xs text-gray-400 mt-1"></p>
+            <div id="game-over-banner" class="bg-gradient-to-b from-slate-900 to-slate-950 border-2 border-orange-500/30 p-6 rounded-3xl hidden flex-col sm:flex-row justify-between items-center gap-6 text-center sm:text-left shadow-2xl animate-fade-in">
+                <div class="space-y-1">
+                    <h2 id="banner-headline" class="text-2xl font-black text-orange-400 font-display uppercase tracking-tight"></h2>
+                    <p id="banner-summary" class="text-sm text-slate-300 font-medium max-w-xl"></p>
                 </div>
-                <button onclick="resetToMenu()" class="bg-orange-500 text-white font-black px-6 py-3 rounded-xl uppercase text-xs tracking-wider transition hover:bg-orange-600 cursor-pointer w-full sm:w-auto">
-                    Play Another Round
+                <button onclick="resetToMenu()" class="bg-gradient-to-b from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold px-8 py-3.5 rounded-xl uppercase text-xs tracking-wider transition-all duration-200 shadow-lg shadow-orange-500/20 cursor-pointer w-full sm:w-auto shrink-0 font-display">
+                    Enter New Arena
                 </button>
             </div>
 
-            <div id="input-container-block" class="flex gap-3">
-                <input type="text" id="trivia-input" oninput="checkTriviaGuess()" placeholder="Type complete first or last name..." class="flex-1 bg-gray-900 border border-gray-800 rounded-xl px-4 py-3.5 text-white focus:outline-none focus:border-orange-500 text-sm font-semibold tracking-wide placeholder-gray-600">
-                <button onclick="giveUpMatch()" class="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-black text-xs uppercase tracking-wider px-5 rounded-xl transition transform active:scale-95 cursor-pointer">
-                    🏳️ Give Up
+            <div id="input-container-block" class="flex flex-col sm:flex-row gap-3">
+                <input type="text" id="trivia-input" oninput="checkTriviaGuess()" placeholder="Awaiting player identification..." class="flex-1 bg-slate-900/80 border border-slate-800 rounded-xl px-5 py-4 text-white focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 text-sm font-semibold tracking-wide placeholder-slate-600 transition-all duration-200 shadow-inner">
+                <button onclick="giveUpMatch()" class="bg-gradient-to-b from-slate-800 to-slate-900 hover:from-slate-700 hover:to-slate-800 text-slate-300 border border-slate-700/60 font-bold text-xs uppercase tracking-widest px-6 py-4 sm:py-0 rounded-xl transition transform active:scale-98 cursor-pointer font-display">
+                    🏳️ Concede Match
                 </button>
             </div>
 
-            <div class="bg-gray-900 border border-gray-800 rounded-2xl p-6 space-y-4">
-                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Roster Fill Progress (<span id="unlocked-count" class="font-mono text-white">0</span> / <span id="total-count" class="font-mono text-gray-500">0</span>)</h3>
-                <div id="roster-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5"></div>
+            <div class="bg-slate-900/40 backdrop-blur-sm border border-slate-800/80 rounded-3xl p-6 md:p-8 space-y-4 shadow-xl">
+                <div class="flex justify-between items-center border-b border-slate-800/60 pb-3">
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest">ROSTER ANALYSIS</h3>
+                    <div class="text-xs font-mono bg-slate-950 px-2.5 py-1 rounded-md border border-slate-800 text-slate-300">
+                        <span id="unlocked-count" class="font-bold text-white">0</span> <span class="text-slate-600">/</span> <span id="total-count" class="text-slate-400">0</span>
+                    </div>
+                </div>
+                <div id="roster-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3"></div>
             </div>
         </div>
     </div>
@@ -104,12 +133,12 @@
                     historicalTeamsDatabase = data;
                     const startBtn = document.getElementById('start-btn');
                     startBtn.disabled = false;
-                    startBtn.className = "w-full bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white font-black py-4 rounded-xl shadow-lg uppercase tracking-wider transition transform active:scale-95 cursor-pointer text-sm";
-                    startBtn.innerText = "Generate Target Team & Start Game";
+                    startBtn.className = "w-full bg-gradient-to-b from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold py-4 rounded-xl shadow-xl shadow-orange-500/10 uppercase tracking-widest transition transform active:scale-98 cursor-pointer text-sm font-display";
+                    startBtn.innerText = "🔥 Enter The Arena";
                 })
                 .catch(err => {
-                    console.error("Failed to load local database: ", err);
-                    document.getElementById('start-btn').innerText = "Database Connection Failed.";
+                    console.error("Archive extraction failure: ", err);
+                    document.getElementById('start-btn').innerText = "Database Connection Broken.";
                 });
         });
 
@@ -120,22 +149,22 @@
             const botBox = document.getElementById('bot-diff-container');
 
             if (mode === 'solo') {
-                soloBtn.className = "py-3 px-4 bg-orange-500 text-white font-black rounded-xl text-xs uppercase tracking-wider cursor-pointer";
-                vsBtn.className = "py-3 px-4 bg-gray-950 border border-gray-800 text-gray-300 font-bold rounded-xl text-xs uppercase tracking-wider cursor-pointer";
-                botBox.classList.add('opacity-40', 'pointer-events-none');
+                soloBtn.className = "py-3.5 px-4 bg-gradient-to-b from-orange-500 to-orange-600 text-white font-bold rounded-xl text-xs uppercase tracking-wider cursor-pointer shadow-lg shadow-orange-500/20 transition-all duration-200";
+                vsBtn.className = "py-3.5 px-4 bg-slate-950 border border-slate-800 text-slate-400 font-bold rounded-xl text-xs uppercase tracking-wider cursor-pointer transition-all duration-200";
+                botBox.classList.add('opacity-30', 'pointer-events-none');
             } else {
-                vsBtn.className = "py-3 px-4 bg-orange-500 text-white font-black rounded-xl text-xs uppercase tracking-wider cursor-pointer";
-                soloBtn.className = "py-3 px-4 bg-gray-950 border border-gray-800 text-gray-300 font-bold rounded-xl text-xs uppercase tracking-wider cursor-pointer";
-                botBox.classList.remove('opacity-40', 'pointer-events-none');
+                vsBtn.className = "py-3.5 px-4 bg-gradient-to-b from-orange-500 to-orange-600 text-white font-bold rounded-xl text-xs uppercase tracking-wider cursor-pointer shadow-lg shadow-orange-500/20 transition-all duration-200";
+                soloBtn.className = "py-3.5 px-4 bg-slate-950 border border-slate-800 text-slate-400 font-bold rounded-xl text-xs uppercase tracking-wider cursor-pointer transition-all duration-200";
+                botBox.classList.remove('opacity-30', 'pointer-events-none');
             }
         }
 
         function setBotDifficulty(level) {
             botDifficulty = level;
             ['easy', 'medium', 'hard'].forEach(l => {
-                document.getElementById(`diff-${l}`).className = "py-3 bg-gray-950 border border-gray-800 text-gray-400 text-xs font-bold rounded-xl uppercase tracking-wider cursor-pointer";
+                document.getElementById(`diff-${l}`).className = "py-3.5 bg-slate-950 border border-slate-800 text-slate-400 text-xs font-bold rounded-xl uppercase tracking-wider cursor-pointer transition-all duration-200";
             });
-            document.getElementById(`diff-${level}`).className = "py-3 bg-orange-500 text-white text-xs font-bold rounded-xl uppercase tracking-wider cursor-pointer";
+            document.getElementById(`diff-${level}`).className = "py-3.5 bg-gradient-to-b from-orange-500 to-orange-600 text-white text-xs font-bold rounded-xl uppercase tracking-wider cursor-pointer shadow-lg shadow-orange-500/20 transition-all duration-200";
         }
 
         function startTriviaMatch() {
@@ -187,14 +216,13 @@
             const grid = document.getElementById('roster-grid');
             grid.innerHTML = currentTriviaMatch.roster.map((player, idx) => {
                 if (guessedRosterNames.includes(player)) {
-                    return `<div class="bg-emerald-950/40 border border-emerald-500/30 p-3 rounded-xl text-center"><span class="text-xs font-bold text-emerald-400 block truncate">${player}</span><span class="text-[8px] font-mono font-bold text-emerald-600 block mt-0.5">✓ Found</span></div>`;
+                    return `<div class="bg-emerald-950/20 border border-emerald-500/30 px-4 py-3 rounded-xl flex items-center justify-between shadow-sm shadow-emerald-950/50"><span class="text-sm font-semibold text-emerald-400 truncate">${player}</span><span class="text-[9px] font-mono font-bold text-slate-100 bg-emerald-500 px-1.5 py-0.5 rounded uppercase">USER</span></div>`;
                 } else if (botGuessedRosterNames.includes(player)) {
-                    return `<div class="bg-amber-950/40 border border-amber-500/30 p-3 rounded-xl text-center"><span class="text-xs font-bold text-amber-400 block truncate">${player}</span><span class="text-[8px] font-mono font-bold text-amber-600 block mt-0.5">🤖 Bot Stole</span></div>`;
+                    return `<div class="bg-amber-950/20 border border-amber-500/30 px-4 py-3 rounded-xl flex items-center justify-between shadow-sm shadow-amber-950/50"><span class="text-sm font-semibold text-amber-400 truncate">${player}</span><span class="text-[9px] font-mono font-bold text-slate-950 bg-amber-400 px-1.5 py-0.5 rounded uppercase">BOT</span></div>`;
                 } else if (isGameOver) {
-                    // Highlights completely missing un-guessed names cleanly in red blocks
-                    return `<div class="bg-red-950/30 border border-red-900/40 p-3 rounded-xl text-center"><span class="text-xs font-bold text-red-400 block truncate">${player}</span><span class="text-[8px] font-mono font-bold text-red-700 block mt-0.5">Missing</span></div>`;
+                    return `<div class="bg-rose-950/20 border border-rose-500/20 px-4 py-3 rounded-xl flex items-center justify-between shadow-inner"><span class="text-sm font-semibold text-rose-400/90 truncate">${player}</span><span class="text-[9px] font-mono font-bold text-rose-500 uppercase tracking-wider">MISSED</span></div>`;
                 } else {
-                    return `<div class="bg-gray-950 border border-gray-900 p-3 rounded-xl text-center text-[10px] font-mono font-black text-gray-700 uppercase flex flex-col justify-center min-h-[52px]">Player ${idx+1}</div>`;
+                    return `<div class="bg-slate-900/60 border border-slate-800/80 px-4 py-3.5 rounded-xl text-center text-xs font-mono font-bold text-slate-600 uppercase tracking-widest select-none">Slot ${idx+1}</div>`;
                 }
             }).join('');
 
@@ -246,28 +274,27 @@
             clearInterval(triviaTimerInterval);
             clearInterval(botSimulationInterval);
             
-            // Swap input field with our custom results banner card
             document.getElementById('input-container-block').classList.add('hidden');
             document.getElementById('game-over-banner').classList.remove('hidden');
             
             renderRosterGrid(); 
             
-            let headline = "Round Complete!";
-            let summary = `You identified ${guessedRosterNames.length} out of ${currentTriviaMatch.roster.length} players total. See missed answers in red below!`;
+            let headline = "⏱️ BUZZER BEATER!";
+            let summary = `Session terminated. You cataloged ${guessedRosterNames.length} total active slots. Review all unidentified targets highlighted in red.`;
 
             if (didGiveUp) {
-                headline = "🏳️ Match Conceded";
-                summary = `You opted to forfeit. You completed ${guessedRosterNames.length} tiles. Rest revealed below!`;
+                headline = "🏳️ CONCEDED";
+                summary = `Match voluntarily forfeited. Final yield: ${guessedRosterNames.length} points secured. Unidentified entities are revealed below.`;
             } else if(triviaGameMode === 'versus') {
                 if(guessedRosterNames.length > botGuessedRosterNames.length) {
-                    headline = "🏆 Victory!";
-                    summary = `You defeated the AI bot player ${guessedRosterNames.length} to ${botGuessedRosterNames.length}!`;
+                    headline = "🏆 DRAFT SUCCESS!";
+                    summary = `Outperformed the AI algorithm by a margin of ${guessedRosterNames.length} to ${botGuessedRosterNames.length}. Grid finalized.`;
                 } else if(guessedRosterNames.length < botGuessedRosterNames.length) {
-                    headline = "❌ Defeat";
-                    summary = `The bot outperformed your draft ${botGuessedRosterNames.length} to ${guessedRosterNames.length}.`;
+                    headline = "❌ SWEPT BY THE AI!";
+                    summary = `The bot claimed tactical control of the roster, outscoring you ${botGuessedRosterNames.length} to ${guessedRosterNames.length}.`;
                 } else {
-                    headline = "🤝 Tie Match";
-                    summary = `An equal lock! Both factions managed an even ${guessedRosterNames.length} points.`;
+                    headline = "🤝 STALEMATE MATCH";
+                    summary = `Perfect allocation equilibrium. Both factions cataloged exactly ${guessedRosterNames.length} roster assignments.`;
                 }
             }
 
