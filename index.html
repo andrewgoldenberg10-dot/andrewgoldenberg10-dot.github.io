@@ -76,10 +76,16 @@
     </div>
 
     <div id="results-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden items-center justify-center p-4 z-50">
-        <div class="bg-gray-900 border border-gray-800 rounded-3xl p-6 max-w-xl w-full text-center space-y-4">
+        <div class="bg-gray-900 border border-gray-800 rounded-3xl p-6 max-w-xl w-full text-center space-y-4 max-h-[90vh] overflow-y-auto">
             <h2 id="modal-headline" class="text-2xl font-black text-orange-500"></h2>
             <div id="modal-summary" class="bg-gray-950 border border-gray-800 p-4 rounded-xl text-sm"></div>
-            <button onclick="closeModal()" class="bg-orange-500 text-white font-black px-6 py-2.5 rounded-xl uppercase text-xs tracking-wider cursor-pointer">Play Again</button>
+            
+            <div id="modal-missed-section" class="text-left space-y-2 hidden">
+                <h4 class="text-xs font-bold uppercase tracking-wider text-red-400">Players You Missed:</h4>
+                <div id="modal-missed-list" class="grid grid-cols-2 gap-2 text-xs font-mono text-gray-300 bg-gray-950 p-3 rounded-xl border border-gray-800"></div>
+            </div>
+
+            <button onclick="closeModal()" class="w-full bg-orange-500 text-white font-black px-6 py-3 rounded-xl uppercase text-xs tracking-wider cursor-pointer">Play Again</button>
         </div>
     </div>
 
@@ -160,6 +166,7 @@
             document.getElementById('trivia-setup-card').classList.add('hidden');
             document.getElementById('trivia-active-board').classList.remove('hidden');
             document.getElementById('trivia-timer-block').classList.remove('hidden');
+            document.getElementById('modal-missed-section').classList.add('hidden');
             
             if(triviaGameMode === 'versus') {
                 document.getElementById('vs-scoreboard').classList.remove('hidden');
@@ -182,11 +189,10 @@
             const grid = document.getElementById('roster-grid');
             grid.innerHTML = currentTriviaMatch.roster.map((player, idx) => {
                 if (guessedRosterNames.includes(player)) {
-                    return `<div class="bg-emerald-950/40 border border-emerald-500/30 p-3 rounded-xl text-center animate-fade-in"><span class="text-xs font-bold text-emerald-400 block truncate">${player}</span><span class="text-[8px] font-mono font-bold text-emerald-600 block mt-0.5">✓ Found</span></div>`;
+                    return `<div class="bg-emerald-950/40 border border-emerald-500/30 p-3 rounded-xl text-center"><span class="text-xs font-bold text-emerald-400 block truncate">${player}</span><span class="text-[8px] font-mono font-bold text-emerald-600 block mt-0.5">✓ Found</span></div>`;
                 } else if (botGuessedRosterNames.includes(player)) {
                     return `<div class="bg-amber-950/40 border border-amber-500/30 p-3 rounded-xl text-center"><span class="text-xs font-bold text-amber-400 block truncate">${player}</span><span class="text-[8px] font-mono font-bold text-amber-600 block mt-0.5">🤖 Bot Stole</span></div>`;
                 } else if (isGameOver) {
-                    // Show revealed players if player gave up or timer ended
                     return `<div class="bg-red-950/30 border border-red-900/40 p-3 rounded-xl text-center"><span class="text-xs font-bold text-red-400 block truncate">${player}</span><span class="text-[8px] font-mono font-bold text-red-700 block mt-0.5">Missing</span></div>`;
                 } else {
                     return `<div class="bg-gray-950 border border-gray-900 p-3 rounded-xl text-center text-[10px] font-mono font-black text-gray-700 uppercase flex flex-col justify-center min-h-[52px]">Player ${idx+1}</div>`;
@@ -204,10 +210,8 @@
 
             currentTriviaMatch.roster.forEach(player => {
                 if (!guessedRosterNames.includes(player) && !botGuessedRosterNames.includes(player)) {
-                    // Splits full name into pieces (e.g. "Stephen", "Curry") to test absolute exact structural fragments
                     const nameParts = player.toLowerCase().split(' ');
                     
-                    // Match if input strictly equals full first name, full last name, or the full combined name
                     if (nameParts.includes(val) || player.toLowerCase() === val) {
                         guessedRosterNames.push(player);
                         input.value = "";
@@ -244,7 +248,7 @@
             clearInterval(botSimulationInterval);
             
             document.getElementById('trivia-input').disabled = true;
-            renderRosterGrid(); // Re-render to show un-guessed names in red
+            renderRosterGrid(); 
             
             let headline = "Round Complete!";
             let summary = `You identified ${guessedRosterNames.length} out of ${currentTriviaMatch.roster.length} players.`;
@@ -263,6 +267,14 @@
                     headline = "🤝 Tie Match";
                     summary = `Even split! Both scored ${guessedRosterNames.length}.`;
                 }
+            }
+
+            // FILTER AND APPEND MISSED NAMES INSIDE MODAL
+            const missedPlayers = currentTriviaMatch.roster.filter(p => !guessedRosterNames.includes(p) && !botGuessedRosterNames.includes(p));
+            if (missedPlayers.length > 0) {
+                const missedListContainer = document.getElementById('modal-missed-list');
+                missedListContainer.innerHTML = missedPlayers.map(p => `<div>❌ ${p}</div>`).join('');
+                document.getElementById('modal-missed-section').classList.remove('hidden');
             }
 
             document.getElementById('modal-headline').innerText = headline;
