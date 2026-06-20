@@ -76,4 +76,4 @@ def build_historical_rosters(start_year, end_year):
 
 if __name__ == "__main__":
     # Pulling iconic recent decades (e.g., 2010 through 2026 inclusive)
-    build_historical_rosters(start_year=2010, end_year=2026)
+    build_historical_rosters(start_year=1960, end_year=2026)
