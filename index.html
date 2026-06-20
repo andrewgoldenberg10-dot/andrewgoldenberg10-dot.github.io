@@ -36,24 +36,36 @@
         <div id="trivia-setup-card" class="bg-slate-900/40 backdrop-blur-md border border-slate-800/60 rounded-3xl p-6 md:p-8 space-y-8 shadow-2xl">
             <div class="space-y-1">
                 <h2 class="text-xl font-bold tracking-tight text-slate-100 font-display">Configure Match Parameters</h2>
-                <p class="text-xs text-slate-400">Select your preferred format and artificial intelligence configurations below.</p>
+                <p class="text-xs text-slate-400">Select your preferred format, historical timeline target, and AI settings below.</p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="space-y-6">
                 <div class="space-y-3">
-                    <label class="text-xs text-slate-400 font-bold uppercase tracking-widest block">Gameplay Format</label>
-                    <div class="grid grid-cols-2 gap-3">
-                        <button onclick="setTriviaMode('solo')" id="tmode-solo" class="py-3.5 px-4 bg-gradient-to-b from-orange-500 to-orange-600 text-white font-bold rounded-xl text-xs uppercase tracking-wider cursor-pointer shadow-lg shadow-orange-500/20 transition-all duration-200">🕹️ Solo Campaign</button>
-                        <button onclick="setTriviaMode('versus')" id="tmode-versus" class="py-3.5 px-4 bg-slate-950 border border-slate-800 hover:border-slate-700 text-slate-300 font-bold rounded-xl text-xs uppercase tracking-wider cursor-pointer transition-all duration-200">🤖 Rival Bot AI</button>
+                    <label class="text-xs text-slate-400 font-bold uppercase tracking-widest block">Select Basketball Era</label>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        <button onclick="setTriviaEra('all')" id="era-all" class="py-3 px-3 bg-gradient-to-b from-orange-500 to-orange-600 text-white font-bold rounded-xl text-xs uppercase tracking-wider cursor-pointer shadow-lg shadow-orange-500/20 transition-all duration-200">All Eras</button>
+                        <button onclick="setTriviaEra('classic')" id="era-classic" class="py-3 px-3 bg-slate-950 border border-slate-800 text-slate-400 font-bold rounded-xl text-xs uppercase tracking-wider cursor-pointer transition-all duration-200">Classic (60s-80s)</button>
+                        <button onclick="setTriviaEra('modern')" id="era-modern" class="py-3 px-3 bg-slate-950 border border-slate-800 text-slate-400 font-bold rounded-xl text-xs uppercase tracking-wider cursor-pointer transition-all duration-200">Modern (90s-00s)</button>
+                        <button onclick="setTriviaEra('contemporary')" id="era-contemporary" class="py-3 px-3 bg-slate-950 border border-slate-800 text-slate-400 font-bold rounded-xl text-xs uppercase tracking-wider cursor-pointer transition-all duration-200">Current (10s-20s)</button>
                     </div>
                 </div>
-                
-                <div id="bot-diff-container" class="space-y-3 opacity-30 pointer-events-none transition-opacity duration-300">
-                    <label class="text-xs text-slate-400 font-bold uppercase tracking-widest block">Rival Simulation Difficulty</label>
-                    <div class="grid grid-cols-3 gap-2">
-                        <button onclick="setBotDifficulty('easy')" id="diff-easy" class="py-3.5 bg-slate-950 border border-slate-800 text-slate-400 text-xs font-bold rounded-xl uppercase tracking-wider cursor-pointer transition-all duration-200">Bench</button>
-                        <button onclick="setBotDifficulty('medium')" id="diff-medium" class="py-3.5 bg-gradient-to-b from-orange-500 to-orange-600 text-white text-xs font-bold rounded-xl uppercase tracking-wider cursor-pointer shadow-lg shadow-orange-500/20 transition-all duration-200">Starter</button>
-                        <button onclick="setBotDifficulty('hard')" id="diff-hard" class="py-3.5 bg-slate-950 border border-slate-800 text-slate-400 text-xs font-bold rounded-xl uppercase tracking-wider cursor-pointer transition-all duration-200">All-Star</button>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+                    <div class="space-y-3">
+                        <label class="text-xs text-slate-400 font-bold uppercase tracking-widest block">Gameplay Format</label>
+                        <div class="grid grid-cols-2 gap-3">
+                            <button onclick="setTriviaMode('solo')" id="tmode-solo" class="py-3.5 px-4 bg-gradient-to-b from-orange-500 to-orange-600 text-white font-bold rounded-xl text-xs uppercase tracking-wider cursor-pointer shadow-lg shadow-orange-500/20 transition-all duration-200">🕹️ Solo Campaign</button>
+                            <button onclick="setTriviaMode('versus')" id="tmode-versus" class="py-3.5 px-4 bg-slate-950 border border-slate-800 hover:border-slate-700 text-slate-300 font-bold rounded-xl text-xs uppercase tracking-wider cursor-pointer transition-all duration-200">🤖 Rival Bot AI</button>
+                        </div>
+                    </div>
+                    
+                    <div id="bot-diff-container" class="space-y-3 opacity-30 pointer-events-none transition-opacity duration-300">
+                        <label class="text-xs text-slate-400 font-bold uppercase tracking-widest block">Rival Simulation Difficulty</label>
+                        <div class="grid grid-cols-3 gap-2">
+                            <button onclick="setBotDifficulty('easy')" id="diff-easy" class="py-3.5 bg-slate-950 border border-slate-800 text-slate-400 text-xs font-bold rounded-xl uppercase tracking-wider cursor-pointer transition-all duration-200">Bench</button>
+                            <button onclick="setBotDifficulty('medium')" id="diff-medium" class="py-3.5 bg-gradient-to-b from-orange-500 to-orange-600 text-white text-xs font-bold rounded-xl uppercase tracking-wider cursor-pointer shadow-lg shadow-orange-500/20 transition-all duration-200">Starter</button>
+                            <button onclick="setBotDifficulty('hard')" id="diff-hard" class="py-3.5 bg-slate-950 border border-slate-800 text-slate-400 text-xs font-bold rounded-xl uppercase tracking-wider cursor-pointer transition-all duration-200">All-Star</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -120,6 +132,7 @@
         let guessedRosterNames = [];
         let botGuessedRosterNames = [];
         let triviaGameMode = "solo";
+        let triviaGameEra = "all"; // Tracker for active chosen era filter
         let botDifficulty = "medium";
         let triviaTimeRemaining = 60;
         let triviaTimerInterval = null;
@@ -141,6 +154,14 @@
                     document.getElementById('start-btn').innerText = "Database Connection Broken.";
                 });
         });
+
+        function setTriviaEra(era) {
+            triviaGameEra = era;
+            ['all', 'classic', 'modern', 'contemporary'].forEach(e => {
+                document.getElementById(`era-${e}`).className = "py-3 px-3 bg-slate-950 border border-slate-800 text-slate-400 font-bold rounded-xl text-xs uppercase tracking-wider cursor-pointer transition-all duration-200";
+            });
+            document.getElementById(`era-${era}`).className = "py-3 px-3 bg-gradient-to-b from-orange-500 to-orange-600 text-white font-bold rounded-xl text-xs uppercase tracking-wider cursor-pointer shadow-lg shadow-orange-500/20 transition-all duration-200";
+        }
 
         function setTriviaMode(mode) {
             triviaGameMode = mode;
@@ -170,12 +191,28 @@
         function startTriviaMatch() {
             if (historicalTeamsDatabase.length === 0) return;
             
+            // Filter database array items based on chosen active era filter configuration
+            let filteredPool = historicalTeamsDatabase;
+            if (triviaGameEra === 'classic') {
+                filteredPool = historicalTeamsDatabase.filter(team => parseInt(team.year) >= 1960 && parseInt(team.year) <= 1989);
+            } else if (triviaGameEra === 'modern') {
+                filteredPool = historicalTeamsDatabase.filter(team => parseInt(team.year) >= 1990 && parseInt(team.year) <= 2009);
+            } else if (triviaGameEra === 'contemporary') {
+                filteredPool = historicalTeamsDatabase.filter(team => parseInt(team.year) >= 2010);
+            }
+
+            // Fallback precaution if a specific decade range array section returns blank or unparsed values
+            if (filteredPool.length === 0) {
+                alert("No teams found for the selected era in your JSON file yet!");
+                return;
+            }
+
             clearInterval(triviaTimerInterval);
             clearInterval(botSimulationInterval);
             isGameOver = false;
 
-            const randIndex = Math.floor(Math.random() * historicalTeamsDatabase.length);
-            currentTriviaMatch = historicalTeamsDatabase[randIndex];
+            const randIndex = Math.floor(Math.random() * filteredPool.length);
+            currentTriviaMatch = filteredPool[randIndex];
             guessedRosterNames = [];
             botGuessedRosterNames = [];
             triviaTimeRemaining = 60;
