@@ -41,15 +41,16 @@
 
             <div class="space-y-6">
                 <div class="space-y-3">
-                    <label class="text-xs text-slate-400 font-bold uppercase tracking-widest block">Select Basketball Decade</label>
-                    <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-2">
-                        <button onclick="setTriviaEra('all')" id="era-all" class="py-3 px-1 bg-gradient-to-b from-orange-500 to-orange-600 text-white font-bold rounded-xl text-[11px] uppercase tracking-wider cursor-pointer shadow-lg shadow-orange-500/20 transition-all duration-200">All</button>
-                        <button onclick="setTriviaEra('60s-70s')" id="era-60s-70s" class="py-3 px-1 bg-slate-950 border border-slate-800 text-slate-400 font-bold rounded-xl text-[11px] uppercase tracking-wider cursor-pointer transition-all duration-200">60s-70s</button>
-                        <button onclick="setTriviaEra('80s')" id="era-80s" class="py-3 px-1 bg-slate-950 border border-slate-800 text-slate-400 font-bold rounded-xl text-[11px] uppercase tracking-wider cursor-pointer transition-all duration-200">80s</button>
-                        <button onclick="setTriviaEra('90s')" id="era-90s" class="py-3 px-1 bg-slate-950 border border-slate-800 text-slate-400 font-bold rounded-xl text-[11px] uppercase tracking-wider cursor-pointer transition-all duration-200">90s</button>
-                        <button onclick="setTriviaEra('00s')" id="era-00s" class="py-3 px-1 bg-slate-950 border border-slate-800 text-slate-400 font-bold rounded-xl text-[11px] uppercase tracking-wider cursor-pointer transition-all duration-200">00s</button>
-                        <button onclick="setTriviaEra('10s')" id="era-10s" class="py-3 px-1 bg-slate-950 border border-slate-800 text-slate-400 font-bold rounded-xl text-[11px] uppercase tracking-wider cursor-pointer transition-all duration-200">10s</button>
-                        <button onclick="setTriviaEra('20s')" id="era-20s" class="py-3 px-1 bg-slate-950 border border-slate-800 text-slate-400 font-bold rounded-xl text-[11px] uppercase tracking-wider cursor-pointer transition-all duration-200">20s</button>
+                    <label class="text-xs text-slate-400 font-bold uppercase tracking-widest block">Select Basketball Era</label>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-2">
+                        <button onclick="setTriviaEra('all')" id="era-all" class="py-3 px-1 bg-gradient-to-b from-orange-500 to-orange-600 text-white font-bold rounded-xl text-[10px] uppercase tracking-wider cursor-pointer shadow-lg shadow-orange-500/20 transition-all duration-200">All</button>
+                        <button onclick="setTriviaEra('60s-70s')" id="era-60s-70s" class="py-3 px-1 bg-slate-950 border border-slate-800 text-slate-400 font-bold rounded-xl text-[10px] uppercase tracking-wider cursor-pointer transition-all duration-200">60s-70s</button>
+                        <button onclick="setTriviaEra('80s')" id="era-80s" class="py-3 px-1 bg-slate-950 border border-slate-800 text-slate-400 font-bold rounded-xl text-[10px] uppercase tracking-wider cursor-pointer transition-all duration-200">80s</button>
+                        <button onclick="setTriviaEra('90s')" id="era-90s" class="py-3 px-1 bg-slate-950 border border-slate-800 text-slate-400 font-bold rounded-xl text-[10px] uppercase tracking-wider cursor-pointer transition-all duration-200">90s</button>
+                        <button onclick="setTriviaEra('00s')" id="era-00s" class="py-3 px-1 bg-slate-950 border border-slate-800 text-slate-400 font-bold rounded-xl text-[10px] uppercase tracking-wider cursor-pointer transition-all duration-200">00s</button>
+                        <button onclick="setTriviaEra('10s')" id="era-10s" class="py-3 px-1 bg-slate-950 border border-slate-800 text-slate-400 font-bold rounded-xl text-[10px] uppercase tracking-wider cursor-pointer transition-all duration-200">10s</button>
+                        <button onclick="setTriviaEra('20s')" id="era-20s" class="py-3 px-1 bg-slate-950 border border-slate-800 text-slate-400 font-bold rounded-xl text-[10px] uppercase tracking-wider cursor-pointer transition-all duration-200">20s</button>
+                        <button onclick="setTriviaEra('2026')" id="era-2026" class="py-3 px-1 bg-slate-950 border border-slate-800 text-orange-400 font-bold rounded-xl text-[10px] uppercase tracking-wider cursor-pointer transition-all duration-200">2026 🔥</button>
                     </div>
                 </div>
 
@@ -148,8 +149,6 @@
         let triviaTimerInterval = null;
         let botSimulationInterval = null;
         let isGameOver = false;
-        
-        // Multiplayer Turn State Tracking Variable
         let activeMultiplayerPlayer = 1; 
 
         window.addEventListener('DOMContentLoaded', () => {
@@ -170,10 +169,14 @@
 
         function setTriviaEra(era) {
             triviaGameEra = era;
-            ['all', '60s-70s', '80s', '90s', '00s', '10s', '20s'].forEach(e => {
-                document.getElementById(`era-${e}`).className = "py-3 px-1 bg-slate-950 border border-slate-800 text-slate-400 font-bold rounded-xl text-[11px] uppercase tracking-wider cursor-pointer transition-all duration-200";
+            ['all', '60s-70s', '80s', '90s', '00s', '10s', '20s', '2026'].forEach(e => {
+                if (e === '2026') {
+                    document.getElementById(`era-${e}`).className = "py-3 px-1 bg-slate-950 border border-slate-800 text-orange-400 font-bold rounded-xl text-[10px] uppercase tracking-wider cursor-pointer transition-all duration-200";
+                } else {
+                    document.getElementById(`era-${e}`).className = "py-3 px-1 bg-slate-950 border border-slate-800 text-slate-400 font-bold rounded-xl text-[10px] uppercase tracking-wider cursor-pointer transition-all duration-200";
+                }
             });
-            document.getElementById(`era-${era}`).className = "py-3 px-1 bg-gradient-to-b from-orange-500 to-orange-600 text-white font-bold rounded-xl text-[11px] uppercase tracking-wider cursor-pointer shadow-lg shadow-orange-500/20 transition-all duration-200";
+            document.getElementById(`era-${era}`).className = "py-3 px-1 bg-gradient-to-b from-orange-500 to-orange-600 text-white font-bold rounded-xl text-[10px] uppercase tracking-wider cursor-pointer shadow-lg shadow-orange-500/20 transition-all duration-200";
         }
 
         function setTriviaMode(mode) {
@@ -183,7 +186,6 @@
             const mpBtn = document.getElementById('tmode-multiplayer');
             const botBox = document.getElementById('bot-diff-container');
 
-            // Reset all buttons first
             [soloBtn, vsBtn, mpBtn].forEach(btn => {
                 btn.className = "py-3.5 px-2 bg-slate-950 border border-slate-800 text-slate-400 font-bold rounded-xl text-[11px] uppercase tracking-wider cursor-pointer transition-all duration-200";
             });
@@ -223,11 +225,13 @@
             } else if (triviaGameEra === '10s') {
                 filteredPool = historicalTeamsDatabase.filter(team => parseInt(team.year) >= 2010 && parseInt(team.year) <= 2019);
             } else if (triviaGameEra === '20s') {
-                filteredPool = historicalTeamsDatabase.filter(team => parseInt(team.year) >= 2020);
+                filteredPool = historicalTeamsDatabase.filter(team => parseInt(team.year) >= 2020 && parseInt(team.year) <= 2025);
+            } else if (triviaGameEra === '2026') {
+                filteredPool = historicalTeamsDatabase.filter(team => parseInt(team.year) === 2026);
             }
 
             if (filteredPool.length === 0) {
-                alert("No structural entries matching this specific decade pool exist in your JSON index file yet!");
+                alert("No team entries matching this exact year format/era were found in your JSON roster file!");
                 return;
             }
 
@@ -321,34 +325,52 @@
             if (isGameOver) return;
             const input = document.getElementById('trivia-input');
             const val = input.value.trim().toLowerCase();
+            if (val.length < 2) return; // Prevent empty/too short checks
 
+            let matchedPlayersThisInput = [];
+
+            // 1. Collect all players matching the input that haven't been guessed yet
             currentTriviaMatch.roster.forEach(player => {
                 if (!guessedRosterNames.includes(player) && !botGuessedRosterNames.includes(player)) {
                     const nameParts = player.toLowerCase().split(' ');
-                    
                     if (nameParts.includes(val) || player.toLowerCase() === val) {
-                        if (triviaGameMode === 'multiplayer') {
-                            if (activeMultiplayerPlayer === 1) {
-                                guessedRosterNames.push(player);
-                                document.getElementById('player-score-lbl').innerText = guessedRosterNames.length;
-                                activeMultiplayerPlayer = 2; // Pass Turn
-                            } else {
-                                botGuessedRosterNames.push(player);
-                                document.getElementById('bot-score-lbl').innerText = botGuessedRosterNames.length;
-                                activeMultiplayerPlayer = 1; // Pass Turn
-                            }
-                            updateTurnIndicator();
-                        } else {
-                            guessedRosterNames.push(player);
-                            document.getElementById('player-score-lbl').innerText = guessedRosterNames.length;
-                        }
-                        
-                        input.value = "";
-                        renderRosterGrid();
-                        if (guessedRosterNames.length + botGuessedRosterNames.length === currentTriviaMatch.roster.length) endMatch(false);
+                        matchedPlayersThisInput.push(player);
                     }
                 }
             });
+
+            // 2. If any matches occurred, process them into a single turn execution
+            if (matchedPlayersThisInput.length > 0) {
+                matchedPlayersThisInput.forEach(player => {
+                    if (triviaGameMode === 'multiplayer') {
+                        if (activeMultiplayerPlayer === 1) {
+                            guessedRosterNames.push(player);
+                        } else {
+                            botGuessedRosterNames.push(player);
+                        }
+                    } else {
+                        guessedRosterNames.push(player);
+                    }
+                });
+
+                // Update the visible scoreboard tallies
+                document.getElementById('player-score-lbl').innerText = guessedRosterNames.length;
+                document.getElementById('bot-score-lbl').innerText = botGuessedRosterNames.length;
+
+                // Alternate turn if running multiplayer format
+                if (triviaGameMode === 'multiplayer') {
+                    activeMultiplayerPlayer = (activeMultiplayerPlayer === 1) ? 2 : 1;
+                    updateTurnIndicator();
+                }
+
+                input.value = "";
+                renderRosterGrid();
+
+                // Check win condition
+                if (guessedRosterNames.length + botGuessedRosterNames.length === currentTriviaMatch.roster.length) {
+                    endMatch(false);
+                }
+            }
         }
 
         function runBotSimulation() {
