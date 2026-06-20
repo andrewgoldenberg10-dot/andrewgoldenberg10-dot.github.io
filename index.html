@@ -54,17 +54,17 @@
                     <div class="space-y-3">
                         <label class="text-xs text-slate-400 font-bold uppercase tracking-widest block">Gameplay Format</label>
                         <div class="grid grid-cols-2 gap-3">
-                            <button onclick="setTriviaMode('solo')" id="tmode-solo" class="py-3.5 px-4 bg-gradient-to-b from-orange-500 to-orange-600 text-white font-bold rounded-xl text-xs uppercase tracking-wider cursor-pointer shadow-lg shadow-orange-500/20 transition-all duration-200">🕹️ Solo Campaign</button>
-                            <button onclick="setTriviaMode('versus')" id="tmode-versus" class="py-3.5 px-4 bg-slate-950 border border-slate-800 hover:border-slate-700 text-slate-300 font-bold rounded-xl text-xs uppercase tracking-wider cursor-pointer transition-all duration-200">🤖 Rival Bot AI</button>
+                            <button onclick="setTriviaMode('solo')" id="tmode-solo" class="py-3.5 px-4 bg-gradient-to-b from-orange-500 to-orange-600 text-white font-bold rounded-xl text-xs uppercase tracking-wider cursor-pointer shadow-lg shadow-orange-500/20 transition-all duration-200">Solo </button>
+                            <button onclick="setTriviaMode('versus')" id="tmode-versus" class="py-3.5 px-4 bg-slate-950 border border-slate-800 hover:border-slate-700 text-slate-300 font-bold rounded-xl text-xs uppercase tracking-wider cursor-pointer transition-all duration-200">Rival Bot AI</button>
                         </div>
                     </div>
                     
                     <div id="bot-diff-container" class="space-y-3 opacity-30 pointer-events-none transition-opacity duration-300">
                         <label class="text-xs text-slate-400 font-bold uppercase tracking-widest block">Rival Simulation Difficulty</label>
                         <div class="grid grid-cols-3 gap-2">
-                            <button onclick="setBotDifficulty('easy')" id="diff-easy" class="py-3.5 bg-slate-950 border border-slate-800 text-slate-400 text-xs font-bold rounded-xl uppercase tracking-wider cursor-pointer transition-all duration-200">Bench</button>
-                            <button onclick="setBotDifficulty('medium')" id="diff-medium" class="py-3.5 bg-gradient-to-b from-orange-500 to-orange-600 text-white text-xs font-bold rounded-xl uppercase tracking-wider cursor-pointer shadow-lg shadow-orange-500/20 transition-all duration-200">Starter</button>
-                            <button onclick="setBotDifficulty('hard')" id="diff-hard" class="py-3.5 bg-slate-950 border border-slate-800 text-slate-400 text-xs font-bold rounded-xl uppercase tracking-wider cursor-pointer transition-all duration-200">All-Star</button>
+                            <button onclick="setBotDifficulty('easy')" id="diff-easy" class="py-3.5 bg-slate-950 border border-slate-800 text-slate-400 text-xs font-bold rounded-xl uppercase tracking-wider cursor-pointer transition-all duration-200">Easy</button>
+                            <button onclick="setBotDifficulty('medium')" id="diff-medium" class="py-3.5 bg-gradient-to-b from-orange-500 to-orange-600 text-white text-xs font-bold rounded-xl uppercase tracking-wider cursor-pointer shadow-lg shadow-orange-500/20 transition-all duration-200">Medium</button>
+                            <button onclick="setBotDifficulty('hard')" id="diff-hard" class="py-3.5 bg-slate-950 border border-slate-800 text-slate-400 text-xs font-bold rounded-xl uppercase tracking-wider cursor-pointer transition-all duration-200">Hard</button>
                         </div>
                     </div>
                 </div>
@@ -103,7 +103,7 @@
                     <p id="banner-summary" class="text-sm text-slate-300 font-medium max-w-xl"></p>
                 </div>
                 <button onclick="resetToMenu()" class="bg-gradient-to-b from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold px-8 py-3.5 rounded-xl uppercase text-xs tracking-wider transition-all duration-200 shadow-lg shadow-orange-500/20 cursor-pointer w-full sm:w-auto shrink-0 font-display">
-                    Enter New Arena
+                    Start a New Game
                 </button>
             </div>
 
